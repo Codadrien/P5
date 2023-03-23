@@ -1,17 +1,12 @@
-async function getProducts() {
-    const response = await fetch("http://localhost:3000/api/products");
-    const product = await response.json();
-    return product;
-}
-
 async function init() {
     const products = await getProducts();
-    console.log(products);
-    addClasses(products);
+    displayProducts(products);
 }
 
-function addClasses(products) {
-    products.forEach(function addClasse(product) {
+init();
+
+function displayProducts(products) {
+    products.forEach((product) => {
         // Création balise a
         const link = document.createElement("a");
         link.href = "./product.html?id=" + product._id;
@@ -20,7 +15,7 @@ function addClasses(products) {
         // Création balise img
         const img = document.createElement("img");
         img.src = product.imageUrl;
-        img.alt = product.altTxt + "," + product.name;
+        img.alt = product.altTxt + ", " + product.name;
         // Création balise h3
         const productName = document.createElement("h3");
         productName.classList.add("productName");
@@ -40,7 +35,23 @@ function addClasses(products) {
     });
 }
 
-init();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
