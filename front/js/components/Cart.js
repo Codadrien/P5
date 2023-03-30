@@ -19,12 +19,31 @@ class Cart {
         localStorage.setItem("cart", JSON.stringify(this.items));
     }
 
-    removeItem(item) {
-        // fonction to remove an item from cart
+    deleteProducts(dataId, datacolor) {
+        let index = this.items.findIndex(item => item.id === dataId && item.color === datacolor);
+        this.items.splice(index, 1);
+        localStorage.setItem("cart", JSON.stringify(this.items));
+    }
+
+
+    addPriceToItems(products) {
+        this.items.forEach(item => {
+            item.price = products.find(item => item.id === products._id).price;
+        })
     }
 
     getTotalValue() {
-        // fonction to calculate the total value of the cart
+        for (let i = 0; i < this.items.length; i++) {
+            if (!this.items[i].price) {
+                console.log("pas de prix");
+                return -1;
+            }
+        }
+        totalQuantity.textContent = this.items.reduce((acc, item) => acc + item.quantity, 0);
+        totalPrice.textContent = this.items.reduce((acc, item) => acc + item.quantity * item.price, 0);
+        this.items.forEach(item => {
+            console.log(item.price);
+            console.log(item.quantity);
+        });
     }
-
 }

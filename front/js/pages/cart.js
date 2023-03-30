@@ -1,4 +1,10 @@
 let cartLocalStorage = JSON.parse(localStorage.getItem("cart"));
+const firstName = document.getElementById("firstName");
+const lastName = document.getElementById("lastName");
+const address = document.getElementById("address");
+const city = document.getElementById("city");
+const email = document.getElementById("email");
+let checkFormValue = false;
 
 // trouver l'élément du panier ayant le même ID et la même couleur que l'api
 function displayProducts(products) {
@@ -62,71 +68,43 @@ function displayProducts(products) {
     });
 }
 
-//reduire
-function totalQuantityAndPrice(products) {
-    let arrayPrice = [];
-    let arrayQuantity = [];
-    cartLocalStorage.forEach(product => {
-        dataProduct = products.find(item => item._id === product.id);
-        arrayPrice.push(dataProduct.price);
-        arrayQuantity.push(parseInt(product.quantity));
-        tPrice = 0;
-        tQuantity = arrayQuantity.reduce((acc, val) => acc + val, 0);
-        for (let i = 0; i < arrayPrice.length; i++) {
-            tPrice += arrayPrice[i] * arrayQuantity[i];
-        }
-    });
-    if (cartLocalStorage.length !== 0) {
-        totalQuantity.textContent = tQuantity;
-        totalPrice.textContent = tPrice;
-    } else {
-        totalQuantity.textContent = 0;
-        totalPrice.textContent = 0;
-    }
-}
-
-function quantityListener(products) {
+function quantityListener(products, cart) {
+    //cart.js appel add item
     const inputQuantity = document.querySelectorAll(".itemQuantity");
     inputQuantity.forEach(item => {
         item.addEventListener("input", function () {
-            let inputQuantityValue = item.value;
+            let inputQuantityValue = parseInt(item.value);
             const cart__item = item.closest(".cart__item")
             const dataId = cart__item.dataset.id;
             const datacolor = cart__item.dataset.color;
-            index = cartLocalStorage.findIndex(item => item.id === dataId && item.color === datacolor);
+            let index = cartLocalStorage.findIndex(item => item.id === dataId && item.color === datacolor);
             cartLocalStorage[index].quantity = inputQuantityValue;
 
             // sauvegarde les données du panier dans le localStorage
             localStorage.setItem("cart", JSON.stringify(cartLocalStorage));
-            totalQuantityAndPrice(products);
+            totalQuantityAndPrice(products, cart);
         });
     });
 }
 
-function deleteProducts(products) {
+function deleteProducts(products, cart) {
     const deleteItems = document.querySelectorAll(".deleteItem");
     deleteItems.forEach((deleteItem) => {
         deleteItem.addEventListener("click", function () {
-            console.log("deleteItem")
             const cart__item = deleteItem.closest(".cart__item")
             const dataId = cart__item.dataset.id;
             const datacolor = cart__item.dataset.color;
-            index = cartLocalStorage.findIndex(item => item.id === dataId && item.color === datacolor);
-            console.log("index", index)
-            cartLocalStorage.splice(index, 1);
-            localStorage.setItem("cart", JSON.stringify(cartLocalStorage));
+            cart.deleteProducts(dataId, datacolor);
+            totalQuantityAndPrice(products, cart);
             cart__item.remove();
-            totalQuantityAndPrice(products)
         });
     });
 }
 
-const firstName = document.getElementById("firstName");
-const lastName = document.getElementById("lastName");
-const address = document.getElementById("address");
-const city = document.getElementById("city");
-const email = document.getElementById("email");
-let checkFormValue = false;
+function totalQuantityAndPrice(products, cart) {
+    cart.addPriceToItems(products);
+    cart.getTotalValue(products);
+}
 
 function formListener() {
     const cartFrom = document.querySelectorAll(".cart__order__form__question");
@@ -137,119 +115,13 @@ function formListener() {
     });
 }
 
-function checkForm() {
-    const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
-    if (firstName.value) {
-        if (!firstName.value.match(/^[a-z-|à-ü]+$/i)) {
-            firstNameErrorMsg.textContent = "Le prénom doit seulement contenir des lettres sans espace";
-            checkFormValue = false;
-        } else {
-            firstNameErrorMsg.textContent = "";
-            checkFormValue = true;
-        }
-    } else {
-        checkFormValue = false;
-    }
-    const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
-    if (lastName.value) {
-        if (!lastName.value.match(/^[a-z-|à-ü]+$/i)) {
-            lastNameErrorMsg.textContent = "Le nom doit seulement contenir des lettres sans espace";
-            checkFormValue = false;
-        } else {
-            lastNameErrorMsg.textContent = "";
-            checkFormValue = true;
-        }
-    } else {
-        checkFormValue = false;
-    }
-    const addressErrorMsg = document.getElementById("addressErrorMsg");
-    if (address.value) {
-        if (!address.value.match(/^[a-z- |à-ü|0-9]+$/i)) {
-            addressErrorMsg.textContent = "L'adresse doit seulement contenir des lettres et des chiffres";
-            checkFormValue = false;
-        } else {
-            addressErrorMsg.textContent = "";
-            checkFormValue = true;
-        }
-    } else {
-        checkFormValue = false;
-    }
-    const cityErrorMsg = document.getElementById("cityErrorMsg");
-    if (city.value) {
-        if (!city.value.match(/^[a-z- |à-ü]+$/i)) {
-            console.log("faux");
-            cityErrorMsg.textContent = "La ville doit seulement contenir des lettres";
-            checkFormValue = false;
-        } else {
-            console.log("vrai");
-            cityErrorMsg.textContent = "";
-            checkFormValue = true;
-        }
-    } else {
-        checkFormValue = false;
-    }
-
-    const emailErrorMsg = document.getElementById("emailErrorMsg");
-    if (email.value) {
-        if (!email.value.match(/^[\w_-]+@[\w-]+\.[a-z]{2,4}$/i)) {
-            emailErrorMsg.textContent = "Adresse mail invalide";
-            checkFormValue = false;
-        } else {
-            emailErrorMsg.textContent = "";
-            checkFormValue = true;
-        }
-    } else {
-        checkFormValue = false;
-    }
-}
-
-function orderListener() {
-    order.addEventListener("click", (e) => {
-        e.preventDefault();
-        console.log("checkFormValue", checkFormValue);
-        if (checkFormValue == true) {
-            const contact = {
-                firstName: firstName.value,
-                lastName: lastName.value,
-                address: address.value,
-                city: city.value,
-                email: email.value,
-            };
-            let products = [];
-            cartLocalStorage.forEach(product => products.push(product.id));
-
-            console.log(contact, "contact");
-            console.log(products, "product_Id");
-
-            fetch("http://localhost:3000/api/products/order", {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        contact,
-                        products,
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                })
-                .then(response => response.json())
-                .then(data => window.location.assign("confirmation.html" + "?id=" +
-                    data.orderId));
-            localStorage.clear();
-
-        } else {
-            alert("Formulaire invalide");
-            return;
-        }
-    });
-}
-
 async function init() {
     const products = await getProducts();
-    totalQuantityAndPrice(products);
+    const cart = new Cart();
     displayProducts(products);
-    totalQuantityAndPrice(products);
-    quantityListener(products);
-    deleteProducts(products);
+    quantityListener(products, cart);
+    totalQuantityAndPrice(products, cart);
+    deleteProducts(products, cart);
     formListener()
     orderListener();
 }
