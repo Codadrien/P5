@@ -19,6 +19,14 @@ class Cart {
         localStorage.setItem("cart", JSON.stringify(this.items));
     }
 
+    quantityListener(dataId, datacolor, inputQuantityValue) {
+        let index = this.items.findIndex(item => item.id === dataId && item.color === datacolor);
+        this.items[index].quantity = inputQuantityValue;
+        console.log("inputQuantityValue", inputQuantityValue);
+        console.log("cartLocalStorage[index].quantity", inputQuantityValue);
+        localStorage.setItem("cart", JSON.stringify(this.items));
+    }
+
     deleteProducts(dataId, datacolor) {
         let index = this.items.findIndex(item => item.id === dataId && item.color === datacolor);
         this.items.splice(index, 1);
@@ -39,6 +47,7 @@ class Cart {
                 return -1;
             }
         }
+        console.log("this.items", this.items);
         totalQuantity.textContent = this.items.reduce((acc, item) => acc + item.quantity, 0);
         totalPrice.textContent = this.items.reduce((acc, item) => acc + item.quantity * item.price, 0);
         this.items.forEach(item => {

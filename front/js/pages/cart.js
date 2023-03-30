@@ -69,7 +69,6 @@ function displayProducts(products) {
 }
 
 function quantityListener(products, cart) {
-    //cart.js appel add item
     const inputQuantity = document.querySelectorAll(".itemQuantity");
     inputQuantity.forEach(item => {
         item.addEventListener("input", function () {
@@ -77,11 +76,7 @@ function quantityListener(products, cart) {
             const cart__item = item.closest(".cart__item")
             const dataId = cart__item.dataset.id;
             const datacolor = cart__item.dataset.color;
-            let index = cartLocalStorage.findIndex(item => item.id === dataId && item.color === datacolor);
-            cartLocalStorage[index].quantity = inputQuantityValue;
-
-            // sauvegarde les données du panier dans le localStorage
-            localStorage.setItem("cart", JSON.stringify(cartLocalStorage));
+            cart.quantityListener(dataId, datacolor, inputQuantityValue)
             totalQuantityAndPrice(products, cart);
         });
     });
