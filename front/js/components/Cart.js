@@ -19,6 +19,13 @@ class Cart {
         localStorage.setItem("cart", JSON.stringify(this.items));
     }
 
+    checkCartNotEmpty() {
+        if (this.items.length === 0) {
+            document.querySelector('.cart').style.display = 'none';
+            document.querySelector('.cartAndFormContainer h1').textContent = 'Votre panier est vide.';
+        }
+    }
+
     quantityListener(dataId, datacolor, inputQuantityValue) {
         let index = this.items.findIndex(item => item.id === dataId && item.color === datacolor);
         this.items[index].quantity = inputQuantityValue;

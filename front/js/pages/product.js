@@ -1,3 +1,8 @@
+import {
+    popUp
+}
+from '../utils/popUp.js';
+
 function getId() {
     const currentUrl = window.location.href;
     const url = new URL(currentUrl);
@@ -28,39 +33,40 @@ function displayProduct(product) {
 }
 
 function checkColors() {
-    selectedColor = document.getElementById("colors").value;
+    const selectedColor = document.getElementById("colors").value;
     if (!selectedColor) {
-        alert("Choisissez une couleur");
-        return;
+        popUp("Choisissez une couleur", "popUpError");
+        return false;
     }
+    return true;
 }
 
 function checkQuantity() {
-    selectedQuantity = document.getElementById("quantity").value;
+    const selectedQuantity = document.getElementById("quantity").value;
     if (selectedQuantity < 1 || selectedQuantity > 100) {
-        alert("Choisissez une une quantité entre 1 et 100");
-        return;
+        popUp("Choisissez une une quantité entre 1 et 100", "popUpError");
+        return false;
     }
+    return true;
 }
 
 function setUpAddToCart(product) {
 
     addToCart.addEventListener("click", (e) => {
         e.preventDefault();
-        checkColors();
-        checkQuantity();
-
-        // créer un objet contenant les informations du produit sélectionné
-        const selectedProduct = {
-            color: colors.value,
-            quantity: parseInt(quantity.value),
-            id: product._id,
-        };
-        const cart = new Cart();
-        cart.addItem(selectedProduct);
-        window.confirm("Votre sélection a bien été prise en compte");
-        window.location.assign("cart.html");
+        if (checkColors() && checkQuantity()) {
+            // créer un objet contenant les informations du produit sélectionné
+            const selectedProduct = {
+                color: colors.value,
+                quantity: parseInt(quantity.value),
+                id: product._id,
+            };
+            const cart = new Cart();
+            cart.addItem(selectedProduct);
+            popUp("Votre sélection a bien été prise en compte", "popUpConfirm");
+        }
     });
+
 }
 
 async function init() {

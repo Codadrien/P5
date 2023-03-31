@@ -1,3 +1,8 @@
+import {
+    popUp
+}
+from '../utils/popUp.js';
+
 let cartLocalStorage = JSON.parse(localStorage.getItem("cart"));
 const firstName = document.getElementById("firstName");
 const lastName = document.getElementById("lastName");
@@ -9,7 +14,7 @@ let checkFormValue = false;
 // trouver l'élément du panier ayant le même ID et la même couleur que l'api
 function displayProducts(products) {
     cartLocalStorage.forEach(product => {
-        dataProduct = products.find(item => item._id === product.id);
+        let dataProduct = products.find(item => item._id === product.id);
         const article = document.createElement("article");
         article.className = "cart__item";
         article.setAttribute('data-id', `${product.id}`);
@@ -35,7 +40,7 @@ function displayProducts(products) {
         const settingsQuantity = document.createElement("div");
         settingsQuantity.className = "cart__item__content__settings__quantity";
         // Créer l'élément input avec tous les attributs
-        quantity = document.createElement("input");
+        let quantity = document.createElement("input");
         quantity.type = "number";
         quantity.classList.add("itemQuantity");
         quantity.name = "itemQuantity";
@@ -78,6 +83,7 @@ function quantityListener(products, cart) {
             const datacolor = cart__item.dataset.color;
             cart.quantityListener(dataId, datacolor, inputQuantityValue)
             totalQuantityAndPrice(products, cart);
+            popUp("Changement de quantité pris en compte", "popUpConfirm");
         });
     });
 }
@@ -92,6 +98,9 @@ function deleteProducts(products, cart) {
             cart.deleteProducts(dataId, datacolor);
             totalQuantityAndPrice(products, cart);
             cart__item.remove();
+            popUp("Produit supprimer", "popUpConfirm");
+            console.log("bonjour");
+            cart.checkCartNotEmpty();
         });
     });
 }
@@ -113,6 +122,7 @@ function formListener() {
 async function init() {
     const products = await getProducts();
     const cart = new Cart();
+    cart.checkCartNotEmpty();
     displayProducts(products);
     quantityListener(products, cart);
     totalQuantityAndPrice(products, cart);

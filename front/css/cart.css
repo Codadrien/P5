@@ -134,7 +134,42 @@ h2 {
 	box-shadow: rgb(42 18 206 / 90%) 0 0 22px 6px;
 }
 
+.popUpConfirm{
+	position: fixed;
+	top: 0;
+	left: 50%;
+    translate: -50%;
+	padding: 30px 35px;
+	font-size: 22px;
+	box-shadow: 0 2px 8px black;
+	border-radius: 15px;
+	background-color: var(--secondary-color);
+	color: white;
+	animation : appear 0.4s ease-in-out forwards;
+}
 
+.popUpError{
+	position: fixed;
+	top: 0;
+	left: 50%;
+    translate: -50%;
+	padding: 30px 35px;
+	font-size: 22px;
+	box-shadow: 0 2px 8px black;
+	border-radius: 15px;
+	background-color: #C1381B;
+	color: white;
+	animation : appear 0.4s ease-in-out forwards;
+}
+
+@keyframes appear {
+	from{
+		transform: translateY(-25px);
+	}
+	to{
+		transform: translate(0);
+	}
+}
 
 /***************/
 /*Media queries*/
