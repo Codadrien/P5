@@ -1,14 +1,14 @@
-async function getProducts() {
+export async function getProducts() {
     const response = await fetch("http://localhost:3000/api/products");
     return await response.json();
 }
 
-async function getProduct(id) {
+export async function getProduct(id) {
     const response = await fetch("http://localhost:3000/api/products/" + id);
     return await response.json();
 }
 
-async function sendOrder(contact, products) {
+export async function sendOrder(contact, products) {
     const response = await fetch("http://localhost:3000/api/products/order", {
         method: 'POST',
         body: JSON.stringify({

@@ -1,9 +1,9 @@
-import {
-    popUp
-}
-from '../utils/popUp.js';
+import {popUp} from '../utils/popUp.js';
+import {getProducts, sendOrder} from '../utils/api.js';
+import {checkForm} from '../utils/checkForm.js';
+import Cart from '../components/Cart.js';
 
-// import utils from '../utils/popUp.js';
+///////////////////////////////////////////////////////////////////
 
 // trouver l'élément du panier ayant le même ID et la même couleur que l'api
 function displayProducts(products, cart) {
@@ -116,6 +116,30 @@ function formListener() {
         item.addEventListener("input", () => {
             checkForm();
         });
+    });
+}
+
+function orderListener(cart) {
+    order.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (checkForm() === true) {
+            const contact = {
+                firstName: firstName.value,
+                lastName: lastName.value,
+                address: address.value,
+                city: city.value,
+                email: email.value,
+            };
+            let products = [];
+            cart.getItems().forEach(product => products.push(product.id));
+            sendOrder(contact, products).then(data => window.location.assign("confirmation.html" + "?id=" +
+                data.orderId));
+            localStorage.clear();
+
+        } else {
+            alert("Formulaire invalide");
+            return;
+        }
     });
 }
 

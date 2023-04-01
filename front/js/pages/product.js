@@ -1,7 +1,8 @@
-import {
-    popUp
-}
-from '../utils/popUp.js';
+import {getProduct} from '../utils/api.js';
+import {popUp} from '../utils/popUp.js';
+import Cart from '../components/Cart.js';
+
+////////////////////////////////////////////////////////
 
 function getId() {
     const currentUrl = window.location.href;

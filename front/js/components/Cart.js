@@ -1,4 +1,4 @@
-class Cart {
+export default class Cart {
 
     constructor() {
         this.items = JSON.parse(localStorage.getItem('cart')) || [];

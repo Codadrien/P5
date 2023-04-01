@@ -1,3 +1,7 @@
+import {getProducts} from '../utils/api.js';
+
+//////////////////////////////////////////////////////
+
 async function init() {
     const products = await getProducts();
     displayProducts(products);

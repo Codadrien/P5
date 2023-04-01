@@ -1,4 +1,4 @@
-function checkForm() {
+export function checkForm() {
     const firstName = document.getElementById("firstName");
     const lastName = document.getElementById("lastName");
     const address = document.getElementById("address");
@@ -62,28 +62,4 @@ function checkForm() {
         checkFormValue = false;
     }
     return checkFormValue;
-}
-
-function orderListener(cart) {
-    order.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (checkForm() === true) {
-            const contact = {
-                firstName: firstName.value,
-                lastName: lastName.value,
-                address: address.value,
-                city: city.value,
-                email: email.value,
-            };
-            let products = [];
-            cart.getItems().forEach(product => products.push(product.id));
-            sendOrder(contact, products).then(data => window.location.assign("confirmation.html" + "?id=" +
-                data.orderId));
-            localStorage.clear();
-
-        } else {
-            alert("Formulaire invalide");
-            return;
-        }
-    });
 }
