@@ -1,4 +1,10 @@
 function checkForm() {
+    const firstName = document.getElementById("firstName");
+    const lastName = document.getElementById("lastName");
+    const address = document.getElementById("address");
+    const city = document.getElementById("city");
+    const email = document.getElementById("email");
+    let checkFormValue = true;
     const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
     if (firstName.value) {
         if (!firstName.value.match(/^[a-z-|à-ü]+$/i)) {
@@ -6,7 +12,6 @@ function checkForm() {
             checkFormValue = false;
         } else {
             firstNameErrorMsg.textContent = "";
-            checkFormValue = true;
         }
     } else {
         checkFormValue = false;
@@ -18,7 +23,6 @@ function checkForm() {
             checkFormValue = false;
         } else {
             lastNameErrorMsg.textContent = "";
-            checkFormValue = true;
         }
     } else {
         checkFormValue = false;
@@ -30,7 +34,6 @@ function checkForm() {
             checkFormValue = false;
         } else {
             addressErrorMsg.textContent = "";
-            checkFormValue = true;
         }
     } else {
         checkFormValue = false;
@@ -42,7 +45,6 @@ function checkForm() {
             checkFormValue = false;
         } else {
             cityErrorMsg.textContent = "";
-            checkFormValue = true;
         }
     } else {
         checkFormValue = false;
@@ -55,17 +57,17 @@ function checkForm() {
             checkFormValue = false;
         } else {
             emailErrorMsg.textContent = "";
-            checkFormValue = true;
         }
     } else {
         checkFormValue = false;
     }
+    return checkFormValue;
 }
 
-function orderListener() {
+function orderListener(cart) {
     order.addEventListener("click", (e) => {
         e.preventDefault();
-        if (checkFormValue == true) {
+        if (checkForm() === true) {
             const contact = {
                 firstName: firstName.value,
                 lastName: lastName.value,
@@ -74,21 +76,9 @@ function orderListener() {
                 email: email.value,
             };
             let products = [];
-            cartLocalStorage.forEach(product => products.push(product.id));
-
-            fetch("http://localhost:3000/api/products/order", {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        contact,
-                        products,
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                })
-                .then(response => response.json())
-                .then(data => window.location.assign("confirmation.html" + "?id=" +
-                    data.orderId));
+            cart.getItems().forEach(product => products.push(product.id));
+            sendOrder(contact, products).then(data => window.location.assign("confirmation.html" + "?id=" +
+                data.orderId));
             localStorage.clear();
 
         } else {

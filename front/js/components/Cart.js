@@ -5,7 +5,7 @@ class Cart {
     }
 
     getItems() {
-        return this.items
+        return this.items;
     }
 
     addItem(product) {
@@ -19,18 +19,9 @@ class Cart {
         localStorage.setItem("cart", JSON.stringify(this.items));
     }
 
-    checkCartNotEmpty() {
-        if (this.items.length === 0) {
-            document.querySelector('.cart').style.display = 'none';
-            document.querySelector('.cartAndFormContainer h1').textContent = 'Votre panier est vide.';
-        }
-    }
-
     quantityListener(dataId, datacolor, inputQuantityValue) {
         let index = this.items.findIndex(item => item.id === dataId && item.color === datacolor);
         this.items[index].quantity = inputQuantityValue;
-        console.log("inputQuantityValue", inputQuantityValue);
-        console.log("cartLocalStorage[index].quantity", inputQuantityValue);
         localStorage.setItem("cart", JSON.stringify(this.items));
     }
 
@@ -50,16 +41,11 @@ class Cart {
     getTotalValue() {
         for (let i = 0; i < this.items.length; i++) {
             if (!this.items[i].price) {
-                console.log("pas de prix");
                 return -1;
             }
         }
-        console.log("this.items", this.items);
         totalQuantity.textContent = this.items.reduce((acc, item) => acc + item.quantity, 0);
         totalPrice.textContent = this.items.reduce((acc, item) => acc + item.quantity * item.price, 0);
-        this.items.forEach(item => {
-            console.log(item.price);
-            console.log(item.quantity);
-        });
+        this.items.forEach(item => {});
     }
 }

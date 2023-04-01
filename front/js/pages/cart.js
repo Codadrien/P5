@@ -3,17 +3,11 @@ import {
 }
 from '../utils/popUp.js';
 
-let cartLocalStorage = JSON.parse(localStorage.getItem("cart"));
-const firstName = document.getElementById("firstName");
-const lastName = document.getElementById("lastName");
-const address = document.getElementById("address");
-const city = document.getElementById("city");
-const email = document.getElementById("email");
-let checkFormValue = false;
+// import utils from '../utils/popUp.js';
 
 // trouver l'élément du panier ayant le même ID et la même couleur que l'api
-function displayProducts(products) {
-    cartLocalStorage.forEach(product => {
+function displayProducts(products, cart) {
+    cart.getItems().forEach(product => {
         let dataProduct = products.find(item => item._id === product.id);
         const article = document.createElement("article");
         article.className = "cart__item";
@@ -73,10 +67,17 @@ function displayProducts(products) {
     });
 }
 
+function checkCartNotEmpty(cart) {
+    if (cart.getItems().length === 0) {
+        document.querySelector('.cart').style.display = 'none';
+        document.querySelector('.cartAndFormContainer h1').textContent = 'Votre panier est vide.';
+    }
+}
+
 function quantityListener(products, cart) {
     const inputQuantity = document.querySelectorAll(".itemQuantity");
     inputQuantity.forEach(item => {
-        item.addEventListener("input", function () {
+        item.addEventListener("input", () => {
             let inputQuantityValue = parseInt(item.value);
             const cart__item = item.closest(".cart__item")
             const dataId = cart__item.dataset.id;
@@ -99,8 +100,7 @@ function deleteProducts(products, cart) {
             totalQuantityAndPrice(products, cart);
             cart__item.remove();
             popUp("Produit supprimer", "popUpConfirm");
-            console.log("bonjour");
-            cart.checkCartNotEmpty();
+            checkCartNotEmpty(cart);
         });
     });
 }
@@ -122,13 +122,13 @@ function formListener() {
 async function init() {
     const products = await getProducts();
     const cart = new Cart();
-    cart.checkCartNotEmpty();
-    displayProducts(products);
+    checkCartNotEmpty(cart);
+    displayProducts(products, cart);
     quantityListener(products, cart);
     totalQuantityAndPrice(products, cart);
     deleteProducts(products, cart);
-    formListener()
-    orderListener();
+    formListener();
+    orderListener(cart);
 }
 
 init();
