@@ -111,7 +111,7 @@ function deleteProducts(products, cart) {
             cart.deleteProducts(dataId, datacolor);
             totalQuantityAndPrice(products, cart);
             cart__item.remove();
-            popUp("Produit supprimer", "popUpConfirm");
+            popUp("Produit supprimé", "popUpConfirm");
             checkCartNotEmpty(cart);
         });
     });
