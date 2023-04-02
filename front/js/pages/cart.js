@@ -1,13 +1,22 @@
-import {popUp} from '../utils/popUp.js';
-import {getProducts, sendOrder} from '../utils/api.js';
-import {checkForm} from '../utils/checkForm.js';
+import {
+    popUp
+} from '../utils/popUp.js';
+import {
+    getProducts,
+    sendOrder
+} from '../utils/api.js';
+import {
+    checkForm
+} from '../utils/checkForm.js';
 import Cart from '../components/Cart.js';
 
 ///////////////////////////////////////////////////////////////////
 
-// trouver l'élément du panier ayant le même ID et la même couleur que l'api
+//affiche les eléments du panier
 function displayProducts(products, cart) {
+    // cart.getItems() correspond au local storage cf Cart.js
     cart.getItems().forEach(product => {
+        // trouve l'élément du panier ayant le même ID et la même couleur que l'api
         let dataProduct = products.find(item => item._id === product.id);
         const article = document.createElement("article");
         article.className = "cart__item";
@@ -67,6 +76,7 @@ function displayProducts(products, cart) {
     });
 }
 
+// si le panier est vide, affiche seulement "Votre panier est vide" sans le form
 function checkCartNotEmpty(cart) {
     if (cart.getItems().length === 0) {
         document.querySelector('.cart').style.display = 'none';
@@ -74,6 +84,7 @@ function checkCartNotEmpty(cart) {
     }
 }
 
+// écoute le changement de quantité et la mets à jour dans l'affichage
 function quantityListener(products, cart) {
     const inputQuantity = document.querySelectorAll(".itemQuantity");
     inputQuantity.forEach(item => {
@@ -89,6 +100,7 @@ function quantityListener(products, cart) {
     });
 }
 
+// supprime le produit selectionné lorsque le bouton est cliquer
 function deleteProducts(products, cart) {
     const deleteItems = document.querySelectorAll(".deleteItem");
     deleteItems.forEach((deleteItem) => {
@@ -105,11 +117,13 @@ function deleteProducts(products, cart) {
     });
 }
 
+// affiche le total de la quantité et le prix
 function totalQuantityAndPrice(products, cart) {
     cart.addPriceToItems(products);
     cart.getTotalValue(products);
 }
 
+// verifie le regex du formulaire cf checkForm.js
 function formListener() {
     const cartFrom = document.querySelectorAll(".cart__order__form__question");
     cartFrom.forEach((item) => {
@@ -119,6 +133,7 @@ function formListener() {
     });
 }
 
+// envoie de la commande à l'api lorsque le bouton est cliqué
 function orderListener(cart) {
     order.addEventListener("click", (e) => {
         e.preventDefault();
@@ -132,8 +147,9 @@ function orderListener(cart) {
             };
             let products = [];
             cart.getItems().forEach(product => products.push(product.id));
-            sendOrder(contact, products).then(data => window.location.assign("confirmation.html" + "?id=" +
-                data.orderId));
+            sendOrder(contact, products)
+                .then(data => window.location.assign("confirmation.html" + "?id=" +
+                    data.orderId));
             localStorage.clear();
 
         } else {

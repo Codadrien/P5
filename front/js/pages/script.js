@@ -1,14 +1,10 @@
-import {getProducts} from '../utils/api.js';
+import {
+    getProducts
+} from '../utils/api.js';
 
 //////////////////////////////////////////////////////
 
-async function init() {
-    const products = await getProducts();
-    displayProducts(products);
-}
-
-init();
-
+//affiche l'ensemble des produits de manière dynamique
 function displayProducts(products) {
     products.forEach((product) => {
         // Création balise a
@@ -38,3 +34,11 @@ function displayProducts(products) {
         article.appendChild(productDescription);
     });
 }
+
+//permet initier différentes fonctions et variables qui sont utilisées
+async function init() {
+    const products = await getProducts();
+    displayProducts(products);
+}
+
+init();

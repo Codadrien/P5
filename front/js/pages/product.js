@@ -1,15 +1,21 @@
-import {getProduct} from '../utils/api.js';
-import {popUp} from '../utils/popUp.js';
+import {
+    getProduct
+} from '../utils/api.js';
+import {
+    popUp
+} from '../utils/popUp.js';
 import Cart from '../components/Cart.js';
 
 ////////////////////////////////////////////////////////
 
+// recupere l'id qui est dans l'url
 function getId() {
     const currentUrl = window.location.href;
     const url = new URL(currentUrl);
     return url.searchParams.get("id");
 }
 
+//affiche le produit selectionné (product)
 function displayProduct(product) {
     // Création balise img
     const img = document.createElement("img");
@@ -33,6 +39,7 @@ function displayProduct(product) {
     }
 }
 
+// verifie si la couleur est selectionnée
 function checkColors() {
     const selectedColor = document.getElementById("colors").value;
     if (!selectedColor) {
@@ -42,6 +49,7 @@ function checkColors() {
     return true;
 }
 
+// verifie si la quantité est selectionnée
 function checkQuantity() {
     const selectedQuantity = document.getElementById("quantity").value;
     if (selectedQuantity < 1 || selectedQuantity > 100) {
@@ -51,8 +59,8 @@ function checkQuantity() {
     return true;
 }
 
-function setUpAddToCart(product) {
-
+// sauvegarde le produit selectionner dans le localStorage lorsque le bouton est cliqué
+function setUpAddToCart(product, cart) {
     addToCart.addEventListener("click", (e) => {
         e.preventDefault();
         if (checkColors() && checkQuantity()) {
@@ -62,7 +70,6 @@ function setUpAddToCart(product) {
                 quantity: parseInt(quantity.value),
                 id: product._id,
             };
-            const cart = new Cart();
             cart.addItem(selectedProduct);
             popUp("Votre sélection a bien été prise en compte", "popUpConfirm");
         }
@@ -70,11 +77,13 @@ function setUpAddToCart(product) {
 
 }
 
+//permet initier différentes fonctions et variables qui sont utilisées
 async function init() {
     const id = getId();
     const product = await getProduct(id);
+    const cart = new Cart();
     displayProduct(product);
-    setUpAddToCart(product);
+    setUpAddToCart(product, cart);
 }
 
 init();

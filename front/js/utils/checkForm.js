@@ -1,3 +1,4 @@
+// regex du formulaire
 export function checkForm() {
     const firstName = document.getElementById("firstName");
     const lastName = document.getElementById("lastName");
