@@ -159,6 +159,7 @@ function orderListener(cart) {
     });
 }
 
+//permet initier différentes fonctions et variables qui sont utilisées
 async function init() {
     const products = await getProducts();
     const cart = new Cart();

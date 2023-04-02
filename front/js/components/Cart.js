@@ -36,10 +36,10 @@ export default class Cart {
         localStorage.setItem("cart", JSON.stringify(this.items));
     }
 
-    // récuperer le prix du produit depuis l'api
+    // récupere le prix du produit depuis l'api
     addPriceToItems(products) {
         this.items.forEach(item => {
-            item.price = products.find(item => item.id === products._id).price;
+            item.price = products.find(product => product._id === item.id).price;
         })
     }
 
