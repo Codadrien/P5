@@ -134,7 +134,7 @@ function formListener() {
 }
 
 // envoie de la commande à l'api lorsque le bouton est cliqué
-function orderListener(cart) {
+function orderListener(cart, popUp) {
     order.addEventListener("click", (e) => {
         e.preventDefault();
         if (checkForm() === true) {
@@ -153,7 +153,7 @@ function orderListener(cart) {
             localStorage.clear();
 
         } else {
-            alert("Formulaire invalide");
+            popUp("Formulaire invalide", "popUpError");
             return;
         }
     });
@@ -169,7 +169,7 @@ async function init() {
     totalQuantityAndPrice(products, cart);
     deleteProducts(products, cart);
     formListener();
-    orderListener(cart);
+    orderListener(cart, popUp);
 }
 
 init();
